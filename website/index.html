@@ -5,15 +5,46 @@
 	<link rel="stylesheet" href=""https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head> 
 
-<body style="background-color:white">
+<body style="background-color:white"> 
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+
+<script>
+  async function load() {
+    const model = await tf.loadLayersModel('D:/remotegithub/vgg16_model_js/model.json');
+    return model;
+  };
+
+  function predict(model) {
+    // first we get the value in the input field
+    const userInput = document.getElementById('userInput').value
+    const inputTensor = tf.tensor([parseInt(userInput)]);  // then convert to tensor
+
+    // now lets make the prediction, we use .then because the model is a promise
+    // (this is confusing as a Python user, but useful so check it out if interested)
+    model.then(model => {
+      let result = model.predict(inputTensor); 
+      if (result<0.5) 
+        document.write(result)
+       alert("Covid19 detected");
+      else  
+          document.write(result)
+          alert("No Covid19");
+                //result = result.round().dataSync()[0];  // round prediction and get value
+      //alert(result ? "odd" : "even");
+    });
+  };
+  
+  const model = load();  // load model immediately to avoid delay when user clicks 'Predict'
+</script>
 <div id="maintext" style="position:absolute; margin:auto; width:700px; height:200px; text-align:center; top:0; bottom: 0; left: 0; right: 0;">  
   <h1 class="text-light mb-2"> Upload your Chest X ray to be classified! </h1> 
-  <h2 class="text-light mb-3">Disclaimer: Please do not take medical treatments on the basis of classification done by the website. The owners do not bear any resposnibility.
+  <h2 class="text-light mb-3">Disclaimer: Please do not take medical treatments on the basis of classification done by the website. The owners do not bear any responsibility.
   <h4 class="text-light mb-5">(Please upload images less than 500kb in size)</h4>
   <form method=post enctype=multipart/form-data>
      <p class="text-light">
-        <input type=file name=file>
-        <input type=submit value=Upload>
+        <input id="userInput" type=file name=file> 
+        <button onclick="predict(model)">Predict</button>
+        <!--<input type=submit value=Upload>-->
      </p>
   </form>
 </div>
