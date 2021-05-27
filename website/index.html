@@ -10,25 +10,30 @@
 
 <script>
   async function load() {
-    const model = await tf.loadLayersModel('D:/remotegithub/vgg16_model_js/model.json');
+    const model = await tf.loadLayersModel('https://github.com/Weedmastercrucifer/diseasedetector/blob/main/vgg16_model_js/model.json');
     return model;
   };
 
   function predict(model) {
     // first we get the value in the input field
     const userInput = document.getElementById('userInput').value
-    const inputTensor = tf.tensor([parseInt(userInput)]);  // then convert to tensor
+    const inputTensor = tf.fromPixels(userInput);
+    const preprocessedInput= inputTensor.expandDims(224,224);//tf.tensor([parseInt(userInput)]);  // then convert to tensor
 
     // now lets make the prediction, we use .then because the model is a promise
     // (this is confusing as a Python user, but useful so check it out if interested)
     model.then(model => {
-      let result = model.predict(inputTensor); 
+      let result = model.predict(preprocessedInput); 
       if (result<0.5) 
-        document.write(result)
-       alert("Covid19 detected");
-      else  
+        {
           document.write(result)
-          alert("No Covid19");
+       alert("Covid19 detected");
+     }
+      else  
+      { 
+        document.write(result)
+        alert("No Covid19"); 
+      }
                 //result = result.round().dataSync()[0];  // round prediction and get value
       //alert(result ? "odd" : "even");
     });
