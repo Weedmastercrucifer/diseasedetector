@@ -8,10 +8,11 @@
 <body style="background-color:white"> 
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
 
-<script>
+<script >
   async function load() {
-    const model = await tf.loadLayersModel('https://github.com/Weedmastercrucifer/diseasedetector/blob/main/vgg16_model_js/model.json');
+    const model = await tf.loadLayersModel('vgg16_model_js/model.json');
     return model;
+    
   };
 
   function predict(model) {
