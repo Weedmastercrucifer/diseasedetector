@@ -18,7 +18,7 @@
   function predict(model) {
     // first we get the value in the input field
     const userInput = document.getElementById('userInput').value
-    const inputTensor = tf.fromPixels(userInput);
+    const inputTensor = tf.browser.fromPixels(userInput);
     const preprocessedInput= inputTensor.expandDims(224,224);//tf.tensor([parseInt(userInput)]);  // then convert to tensor
 
     // now lets make the prediction, we use .then because the model is a promise
